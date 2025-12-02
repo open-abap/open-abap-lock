@@ -1,0 +1,7 @@
+CLASS kernel_lock_concurrent DEFINITION PUBLIC.
+  PUBLIC SECTION.
+ENDCLASS.
+
+CLASS kernel_lock_concurrent IMPLEMENTATION.
+
+ENDCLASS.
