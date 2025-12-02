@@ -1,0 +1,2 @@
+# open-abap-lock
+lock
