@@ -2,6 +2,8 @@
 
 Concurrent/cross session locking for Open ABAP.
 
+Requires and works with PostgreSQL as the database backend, and only on the DEFAULT connection.
+
 ## Notes
 
 * [PostgreSQL - Advisory Locks](https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS)
