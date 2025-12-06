@@ -308,18 +308,7 @@
       "checkForms": true
     },
     "method_overwrites_builtin": true,
-    "method_parameter_names": {
-      "exclude": [],
-      "severity": "Error",
-      "patternKind": "required",
-      "ignoreNames": [],
-      "ignorePatterns": [],
-      "ignoreExceptions": true,
-      "importing": "^I._.+$",
-      "returning": "^R._.+$",
-      "changing": "^C._.+$",
-      "exporting": "^E._.+$"
-    },
+    "method_parameter_names": false,
     "mix_returning": true,
     "modify_only_own_db_tables": {
       "exclude": [],
@@ -548,7 +537,7 @@
     "unused_types": false,
     "unused_variables": false,
     "use_bool_expression": true,
-    "use_class_based_exceptions": true,
+    "use_class_based_exceptions": false,
     "use_line_exists": true,
     "use_new": true,
     "when_others_last": true,

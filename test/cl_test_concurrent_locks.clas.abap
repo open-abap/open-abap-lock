@@ -1,0 +1,7 @@
+CLASS cl_test_concurrent_locks DEFINITION PUBLIC.
+  PUBLIC SECTION.
+ENDCLASS.
+
+CLASS cl_test_concurrent_locks IMPLEMENTATION.
+
+ENDCLASS.
