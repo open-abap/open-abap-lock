@@ -13,6 +13,9 @@
     "ignoreSyntaxCheck": false,
     "addFilenames": true,
     "addCommonJS": true,
+    "populateTables": {
+      "reposrc": false
+    },
     "setup": {
       "filename": "../test/setup.mjs",
       "preFunction": "preFunction"
