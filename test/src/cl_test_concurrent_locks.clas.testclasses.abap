@@ -18,6 +18,10 @@ CLASS ltcl_test IMPLEMENTATION.
 
     " todo: test that lock is held?
 
+    CALL FUNCTION 'DEQUEUE_EZABAPGIT_UNIT_T'
+      EXPORTING
+        bname = 'HELLO'.
+
   ENDMETHOD.
 
 ENDCLASS.

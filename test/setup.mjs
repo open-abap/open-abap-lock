@@ -22,3 +22,7 @@ export async function preFunction(abap, schemas, insert) {
   }
   await abap.context.databaseConnections["DEFAULT"].execute(insert);
 }
+
+export async function postFunction() {
+  abap.Classes["KERNEL_LOCK"] = abap.Classes["KERNEL_LOCK_CONCURRENT"];
+}
