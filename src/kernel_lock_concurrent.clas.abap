@@ -92,9 +92,12 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
   METHOD dequeue.
 
     DATA lv_table_name TYPE string.
-    DATA lv_lock_key   TYPE kernel_locks-lock_key.
 
     WRITE '@KERNEL lv_table_name.set(INPUT.TABLE_NAME);'.
+
+    DATA(lv_lock_key) = build_lock_key(
+      input      = input
+      table_name = lv_table_name ).
 
     DELETE FROM kernel_locks WHERE table_name = lv_table_name AND lock_key = lv_lock_key.
 
