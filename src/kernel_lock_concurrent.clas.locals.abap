@@ -41,7 +41,8 @@ CLASS lcl_key IMPLEMENTATION.
       IF lv_index < 0.
         lv_index = 0.
       ENDIF.
-      lv_hex = iv_key+lv_index(3).
+      lv_numc = iv_key+lv_index(3).
+      lv_hex = lv_numc+1(2).
       CONCATENATE lv_hex lv_xstring INTO lv_xstring IN BYTE MODE.
     ENDWHILE.
     rv_text = cl_abap_conv_codepage=>create_in( )->convert( lv_xstring ).
