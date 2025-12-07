@@ -74,10 +74,13 @@ ENDCLASS.
 
 CLASS lcl_advisory IMPLEMENTATION.
   METHOD lock.
+" pg_try_advisory_lock
+
     WRITE / 'Advisory lock acquired'.
   ENDMETHOD.
 
   METHOD unlock.
+" pg_advisory_unlock
     WRITE / 'Advisory lock released'.
   ENDMETHOD.
 ENDCLASS.
