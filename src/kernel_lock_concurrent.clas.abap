@@ -43,7 +43,6 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     WRITE '@KERNEL lv_enqueue_name.set(INPUT.ENQUEUE_NAME);'.
 
     CREATE DATA lr_dref TYPE (lv_table_name).
-    ASSERT sy-subrc = 0.
     ASSIGN lr_dref->* TO <lg_row>.
 
     lo_structdescr ?= cl_abap_typedescr=>describe_by_data( <lg_row> ).
@@ -78,14 +77,13 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
   METHOD dequeue.
 
     DATA lv_table_name TYPE string.
-    DATA lv_lock_key   TYPE string.
+    DATA lv_lock_key   TYPE kernel_locks-lock_key.
 
     WRITE '@KERNEL lv_table_name.set(INPUT.TABLE_NAME);'.
 
     DELETE FROM kernel_locks WHERE table_name = lv_table_name AND lock_key = lv_lock_key.
 
-    WRITE / 'dequque todo'.
-    lcl_advisory=>unlock( '123' ).
+    lcl_advisory=>unlock( lcl_key=>encode( lv_lock_key ) ).
   ENDMETHOD.
 
 ENDCLASS.

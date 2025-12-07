@@ -31,7 +31,7 @@ CLASS ltcl_test_key IMPLEMENTATION.
     DATA lt_inputs TYPE ty_inputs.
     lt_inputs = VALUE #( ( |ABC123| )
                ( |The quick brown fox 123!| )
-               ( |  padded text  | )
+               ( |padded    text| )
                ( |~!@#$%^&*()_+-=| ) ).
 
     LOOP AT lt_inputs INTO DATA(lv_input).
