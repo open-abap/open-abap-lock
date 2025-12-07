@@ -29,11 +29,12 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
   METHOD enqueue.
 
-    DATA lv_table_name TYPE string.
+    DATA lv_table_name   TYPE string.
     DATA lv_enqueue_name TYPE string.
-    DATA lo_structdescr TYPE REF TO cl_abap_structdescr.
-    DATA ls_lock_row TYPE kernel_locks.
-    DATA lr_dref TYPE REF TO data.
+    DATA lo_structdescr  TYPE REF TO cl_abap_structdescr.
+    DATA ls_lock_row     TYPE kernel_locks.
+    DATA lr_dref         TYPE REF TO data.
+
     FIELD-SYMBOLS <lg_row> TYPE any.
 
 *******************
@@ -68,12 +69,15 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     WRITE: / 'Simulating enqueue for table:', lv_table_name, 'and enqueue:', lv_enqueue_name.
 
+    lcl_advisory=>lock( ).
     INSERT kernel_locks FROM @ls_lock_row.
     ASSERT sy-subrc = 0.
+
   ENDMETHOD.
 
   METHOD dequeue.
     WRITE / 'dequque todo'.
+    lcl_advisory=>unlock( ).
   ENDMETHOD.
 
 ENDCLASS.
