@@ -313,12 +313,7 @@
     "method_overwrites_builtin": true,
     "method_parameter_names": false,
     "mix_returning": true,
-    "modify_only_own_db_tables": {
-      "exclude": [],
-      "severity": "Error",
-      "reportDynamic": true,
-      "ownTables": "^[yz]"
-    },
+    "modify_only_own_db_tables": false,
     "msag_consistency": {
       "exclude": [],
       "severity": "Error",

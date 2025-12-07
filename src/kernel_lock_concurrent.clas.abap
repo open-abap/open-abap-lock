@@ -36,12 +36,13 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     ASSERT lo_structdescr IS NOT INITIAL.
 
     LOOP AT lo_structdescr->components INTO DATA(ls_component).
-      WRITE: / 'Component:', ls_component-name, 'Type:', ls_component-type_kind.
       ASSIGN COMPONENT ls_component-name OF STRUCTURE input TO FIELD-SYMBOL(<lv_field>).
-      ASSERT sy-subrc = 0.
-      ASSIGN COMPONENT ls_component-name OF STRUCTURE <lg_row> TO FIELD-SYMBOL(<lv_row_field>).
-      ASSERT sy-subrc = 0.
-      <lv_row_field> = <lv_field>.
+      " fields are not mandatory
+      IF sy-subrc = 0.
+        ASSIGN COMPONENT ls_component-name OF STRUCTURE <lg_row> TO FIELD-SYMBOL(<lv_row_field>).
+        ASSERT sy-subrc = 0.
+        <lv_row_field> = <lv_field>.
+      ENDIF.
     ENDLOOP.
 
     ls_lock_row-table_name = lv_table_name.
@@ -54,7 +55,8 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     WRITE: / 'Simulating enqueue for table:', lv_table_name, 'and enqueue:', lv_enqueue_name.
 
-    ASSERT 1 = 'todo'.
+    INSERT kernel_locks FROM @ls_lock_row.
+    ASSERT sy-subrc = 0.
   ENDMETHOD.
 
   METHOD dequeue.
