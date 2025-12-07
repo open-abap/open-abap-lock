@@ -53,6 +53,14 @@ ENDCLASS.
 
 ******************************************************************
 
+CLASS lcx_advisory_lock_failed DEFINITION INHERITING FROM cx_static_check.
+ENDCLASS.
+
+CLASS lcx_advisory_lock_failed IMPLEMENTATION.
+ENDCLASS.
+
+******************************************************************
+
 CLASS lcl_advisory DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS lock

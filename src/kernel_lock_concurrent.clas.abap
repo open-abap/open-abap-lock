@@ -99,8 +99,17 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
       input      = input
       table_name = lv_table_name ).
 
+    TRY.
+        lcl_advisory=>lock( lcl_key=>encode( lv_lock_key ) ).
+      CATCH lcx_advisory_lock_failed.
+        " it doesnt have the lock, or another session has the lock
+        RETURN.
+    ENDTRY.
+
     DELETE FROM kernel_locks WHERE table_name = lv_table_name AND lock_key = lv_lock_key.
 
+    " advisory locks stack,
+    lcl_advisory=>unlock( lcl_key=>encode( lv_lock_key ) ).
     lcl_advisory=>unlock( lcl_key=>encode( lv_lock_key ) ).
   ENDMETHOD.
 
