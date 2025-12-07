@@ -2,7 +2,7 @@ CLASS lcl_key DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS encode
       IMPORTING
-        iv_text       TYPE string
+        iv_text       TYPE kernel_locks-lock_key
       RETURNING
         VALUE(rv_key) TYPE string.
 
@@ -10,16 +10,16 @@ CLASS lcl_key DEFINITION.
       IMPORTING
         iv_key         TYPE string
       RETURNING
-        VALUE(rv_text) TYPE string.
+        VALUE(rv_text) TYPE kernel_locks-lock_key.
 ENDCLASS.
 
 CLASS lcl_key IMPLEMENTATION.
   METHOD encode.
-    DATA lv_numc   TYPE n LENGTH 3.
-    DATA lv_index  TYPE i.
-    DATA lv_byte   TYPE i.
-    DATA lv_hex    TYPE x LENGTH 1.
-    DATA(lv_xstr) = cl_abap_conv_codepage=>create_out( )->convert( iv_text ).
+    DATA lv_numc  TYPE n LENGTH 3.
+    DATA lv_index TYPE i.
+    DATA lv_byte  TYPE i.
+    DATA lv_hex   TYPE x LENGTH 1.
+    DATA(lv_xstr) = cl_abap_conv_codepage=>create_out( )->convert( |{ iv_text }| ).
     DO xstrlen( lv_xstr ) TIMES.
       lv_index = sy-index - 1.
       lv_hex = lv_xstr+lv_index(1).

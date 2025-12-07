@@ -69,13 +69,21 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     WRITE: / 'Simulating enqueue for table:', lv_table_name, 'and enqueue:', lv_enqueue_name.
 
-    lcl_advisory=>lock( '123' ).
+    lcl_advisory=>lock( lcl_key=>encode( ls_lock_row-lock_key ) ).
     INSERT kernel_locks FROM @ls_lock_row.
     ASSERT sy-subrc = 0.
 
   ENDMETHOD.
 
   METHOD dequeue.
+
+    DATA lv_table_name TYPE string.
+    DATA lv_lock_key   TYPE string.
+
+    WRITE '@KERNEL lv_table_name.set(INPUT.TABLE_NAME);'.
+
+    DELETE FROM kernel_locks WHERE table_name = lv_table_name AND lock_key = lv_lock_key.
+
     WRITE / 'dequque todo'.
     lcl_advisory=>unlock( '123' ).
   ENDMETHOD.
