@@ -1,5 +1,7 @@
 CLASS kernel_lock_concurrent DEFINITION PUBLIC.
   PUBLIC SECTION.
+    CLASS-METHODS class_constructor.
+
     CLASS-METHODS enqueue
       IMPORTING
         input TYPE any
@@ -10,9 +12,20 @@ CLASS kernel_lock_concurrent DEFINITION PUBLIC.
     CLASS-METHODS dequeue
       IMPORTING
         input TYPE any.
+  PRIVATE SECTION.
+    CLASS-METHODS cleanup_locks.
 ENDCLASS.
 
 CLASS kernel_lock_concurrent IMPLEMENTATION.
+
+  METHOD class_constructor.
+    cleanup_locks( ).
+  ENDMETHOD.
+
+  METHOD cleanup_locks.
+* todoooooo
+    DELETE FROM kernel_locks WHERE username = sy-uname.
+  ENDMETHOD.
 
   METHOD enqueue.
 
@@ -60,7 +73,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD dequeue.
-    ASSERT 1 = 'todo'.
+    WRITE / 'dequque todo'.
   ENDMETHOD.
 
 ENDCLASS.
