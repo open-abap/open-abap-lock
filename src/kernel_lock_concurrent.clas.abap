@@ -14,6 +14,12 @@ CLASS kernel_lock_concurrent DEFINITION PUBLIC.
         input TYPE any.
   PRIVATE SECTION.
     CLASS-METHODS cleanup_locks.
+    CLASS-METHODS build_lock_key
+      IMPORTING
+        input              TYPE any
+        table_name         TYPE string
+      RETURNING
+        VALUE(rv_lock_key) TYPE kernel_locks-lock_key.
 ENDCLASS.
 
 CLASS kernel_lock_concurrent IMPLEMENTATION.
@@ -27,22 +33,14 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     DELETE FROM kernel_locks WHERE username = sy-uname.
   ENDMETHOD.
 
-  METHOD enqueue.
+  METHOD build_lock_key.
 
-    DATA lv_table_name   TYPE string.
-    DATA lv_enqueue_name TYPE string.
-    DATA lo_structdescr  TYPE REF TO cl_abap_structdescr.
-    DATA ls_lock_row     TYPE kernel_locks.
     DATA lr_dref         TYPE REF TO data.
+    DATA lo_structdescr  TYPE REF TO cl_abap_structdescr.
 
     FIELD-SYMBOLS <lg_row> TYPE any.
 
-*******************
-
-    WRITE '@KERNEL lv_table_name.set(INPUT.TABLE_NAME);'.
-    WRITE '@KERNEL lv_enqueue_name.set(INPUT.ENQUEUE_NAME);'.
-
-    CREATE DATA lr_dref TYPE (lv_table_name).
+    CREATE DATA lr_dref TYPE (table_name).
     ASSIGN lr_dref->* TO <lg_row>.
 
     lo_structdescr ?= cl_abap_typedescr=>describe_by_data( <lg_row> ).
@@ -58,8 +56,25 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
+  ENDMETHOD.
+
+  METHOD enqueue.
+
+    DATA lv_enqueue_name TYPE string.
+    DATA lv_table_name   TYPE string.
+    DATA ls_lock_row     TYPE kernel_locks.
+
+*******************
+
+    WRITE '@KERNEL lv_table_name.set(INPUT.TABLE_NAME);'.
+    WRITE '@KERNEL lv_enqueue_name.set(INPUT.ENQUEUE_NAME);'.
+
+    DATA(lv_lock_key) = build_lock_key(
+      input      = input
+      table_name = lv_table_name ).
+
     ls_lock_row-table_name = lv_table_name.
-    ls_lock_row-lock_key = <lg_row>.
+    ls_lock_row-lock_key = lv_lock_key.
     ls_lock_row-username = sy-uname.
     GET TIME STAMP FIELD ls_lock_row-timestamp.
     ls_lock_row-hostname = sy-host.
