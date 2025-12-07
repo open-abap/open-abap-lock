@@ -31,3 +31,9 @@ new db table for custom locks with:
 * lock name
 * table name
 * lock key
+
+## TODO
+
+* _scope
+* wait flag
+* mode

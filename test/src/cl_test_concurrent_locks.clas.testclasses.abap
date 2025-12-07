@@ -7,7 +7,7 @@ CLASS ltcl_test IMPLEMENTATION.
 
   METHOD test_enqueue_dequeue.
 
-    CALL FUNCTION 'ENQUEUE_EZABAPGIT_UNIT_TEST_T'
+    CALL FUNCTION 'ENQUEUE_EZABAPGIT_UNIT_T'
       EXPORTING
         bname          = 'HELLO'
       EXCEPTIONS
