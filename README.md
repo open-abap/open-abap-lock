@@ -37,3 +37,4 @@ new db table for custom locks with:
 * _scope
 * wait flag
 * mode
+* relase at commit work if update task
