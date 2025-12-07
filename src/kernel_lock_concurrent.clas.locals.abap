@@ -16,9 +16,11 @@ ENDCLASS.
 CLASS lcl_key IMPLEMENTATION.
   METHOD encode.
     DATA lv_numc TYPE n LENGTH 3.
+    DATA lv_index TYPE i.
     DATA(lv_hex) = cl_abap_conv_codepage=>create_out( )->convert( iv_text ).
     DO xstrlen( lv_hex ) TIMES.
-      lv_numc = lv_hex+sy-index(1).
+      lv_index = sy-index - 1.
+      lv_numc = lv_hex+lv_index(1).
       rv_key = rv_key && |{ lv_numc }|.
     ENDDO.
   ENDMETHOD.
