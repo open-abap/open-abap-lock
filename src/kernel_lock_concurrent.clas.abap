@@ -69,7 +69,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     WRITE: / 'Simulating enqueue for table:', lv_table_name, 'and enqueue:', lv_enqueue_name.
 
-    lcl_advisory=>lock( ).
+    lcl_advisory=>lock( '123' ).
     INSERT kernel_locks FROM @ls_lock_row.
     ASSERT sy-subrc = 0.
 
@@ -77,7 +77,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
   METHOD dequeue.
     WRITE / 'dequque todo'.
-    lcl_advisory=>unlock( ).
+    lcl_advisory=>unlock( '123' ).
   ENDMETHOD.
 
 ENDCLASS.
