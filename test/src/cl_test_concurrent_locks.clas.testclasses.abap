@@ -2,7 +2,7 @@ CLASS ltcl_test DEFINITION FOR TESTING RISK LEVEL HARMLESS DURATION MEDIUM FINAL
   PUBLIC SECTION.
     METHODS test_enqueue_dequeue FOR TESTING RAISING cx_static_check.
     METHODS standalone_dequeue FOR TESTING RAISING cx_static_check.
-    METHODS cleanup FOR TESTING RAISING cx_static_check.
+    METHODS cleanup_valid FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 CLASS ltcl_test IMPLEMENTATION.
@@ -35,7 +35,7 @@ CLASS ltcl_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD cleanup.
+  METHOD cleanup_valid.
 
 * start with a clean state
     kernel_lock_concurrent=>cleanup_locks( ).
