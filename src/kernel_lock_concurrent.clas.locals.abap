@@ -76,12 +76,22 @@ CLASS lcl_advisory IMPLEMENTATION.
         ASSERT 1 = 2.
     ENDTRY.
 
-    WRITE / 'Advisory lock acquired'.
+    IF lr_foo <> abap_true.
+      RAISE EXCEPTION TYPE lcx_advisory_lock_failed.
+    ENDIF.
+
   ENDMETHOD.
 
   METHOD unlock.
-" pg_advisory_unlock
-    WRITE / 'Advisory lock released'.
+
+    TRY.
+        NEW cl_sql_statement( )->execute_query( |SELECT pg_advisory_unlock( { key } )| ).
+      CATCH cx_sql_exception INTO DATA(lx_sql).
+        WRITE / 'SQL Error:'.
+        WRITE / lx_sql->get_text( ).
+        ASSERT 1 = 2.
+    ENDTRY.
+
   ENDMETHOD.
 
 ENDCLASS.
