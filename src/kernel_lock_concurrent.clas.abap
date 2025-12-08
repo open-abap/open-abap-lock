@@ -121,7 +121,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
         RETURN.
     ENDTRY.
 
-    DELETE FROM kernel_locks WHERE table_name = table_name AND lock_key = lv_lock_key.
+    DELETE FROM kernel_locks WHERE table_name = @table_name AND lock_key = @lv_lock_key.
 
     " advisory locks stack,
     lcl_advisory=>unlock( lcl_key=>encode( lv_lock_key ) ).
