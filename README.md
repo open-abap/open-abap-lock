@@ -14,9 +14,9 @@ scope?
 release on crash
 table `pg_locks`
 
-## TODO
+## Todo
 
-* _scope
-* wait flag
-* mode
+* `_scope`
+* `wait` flag
+* `mode`
 * relase at commit work if update task
