@@ -64,8 +64,28 @@ ENDCLASS.
 CLASS lcl_advisory IMPLEMENTATION.
 
   METHOD exists.
-" todo: implement
-    rv_exists = abap_false.
+* https://www.postgresql.org/docs/current/view-pg-locks.html
+
+    DATA lv_str TYPE string.
+    DATA lr_foo TYPE REF TO data.
+
+
+    ASSERT key IS NOT INITIAL.
+    GET REFERENCE OF lv_str INTO lr_foo.
+
+    TRY.
+        DATA(lo_result) = NEW cl_sql_statement( )->execute_query(
+          |SELECT EXISTS(SELECT * FROM pg_locks WHERE (classid::bigint << 32) \| objid::bigint = 3402733294331)| ).
+        lo_result->set_param( lr_foo ).
+        lo_result->next( ).
+        lo_result->close( ).
+      CATCH cx_sql_exception INTO DATA(lx_sql).
+        WRITE / 'SQL Error:'.
+        WRITE / lx_sql->get_text( ).
+        ASSERT 1 = 2.
+    ENDTRY.
+
+    rv_exists = lv_str.
   ENDMETHOD.
 
   METHOD lock.
@@ -88,7 +108,7 @@ CLASS lcl_advisory IMPLEMENTATION.
         ASSERT 1 = 2.
     ENDTRY.
 
-    IF lr_foo <> abap_true.
+    IF lv_str <> abap_true.
       RAISE EXCEPTION TYPE lcx_advisory_lock_failed.
     ENDIF.
 
