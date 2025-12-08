@@ -1,0 +1,20 @@
+{
+  "name": "open-abap-lock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "test",
+  "scripts": {
+    "lint": "abaplint",
+    "unit": "rm -rf output && abap_transpile abap_transpile.jsonc && echo RUNNING && node output/index.mjs",
+    "docker:start": "docker compose -p open-abap-lock -f test/stack.yml up -d",
+    "docker:stop": "docker compose -p open-abap-lock -f test/stack.yml down -v",
+    "test": "npm run lint && npm run unit"
+  },
+  "license": "",
+  "dependencies": {
+    "@abaplint/cli": "^2.114.6",
+    "@abaplint/runtime": "^2.12.16",
+    "@abaplint/database-pg": "^2.11.78",
+    "@abaplint/transpiler-cli": "^2.12.16"
+  }
+}

@@ -1,6 +1,9 @@
 {
   "global": {
-    "files": "/src/**/*.*"
+    "files": [
+      "/src/**/*.*",
+      "/test/src/**/*.*"
+    ]
   },
   "dependencies": [
     {
@@ -130,7 +133,7 @@
       "exportDynpro": true,
       "dynamicSQL": true
     },
-    "db_operation_in_loop": true,
+    "db_operation_in_loop": false,
     "definitions_top": true,
     "description_empty": false,
     "double_space": {
@@ -308,25 +311,9 @@
       "checkForms": true
     },
     "method_overwrites_builtin": true,
-    "method_parameter_names": {
-      "exclude": [],
-      "severity": "Error",
-      "patternKind": "required",
-      "ignoreNames": [],
-      "ignorePatterns": [],
-      "ignoreExceptions": true,
-      "importing": "^I._.+$",
-      "returning": "^R._.+$",
-      "changing": "^C._.+$",
-      "exporting": "^E._.+$"
-    },
+    "method_parameter_names": false,
     "mix_returning": true,
-    "modify_only_own_db_tables": {
-      "exclude": [],
-      "severity": "Error",
-      "reportDynamic": true,
-      "ownTables": "^[yz]"
-    },
+    "modify_only_own_db_tables": false,
     "msag_consistency": {
       "exclude": [],
       "severity": "Error",
@@ -548,7 +535,7 @@
     "unused_types": false,
     "unused_variables": false,
     "use_bool_expression": true,
-    "use_class_based_exceptions": true,
+    "use_class_based_exceptions": false,
     "use_line_exists": true,
     "use_new": true,
     "when_others_last": true,

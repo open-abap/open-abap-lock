@@ -1,0 +1,10 @@
+services:
+  postgresql:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
