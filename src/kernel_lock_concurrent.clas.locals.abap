@@ -4,51 +4,30 @@ CLASS lcl_key DEFINITION.
       IMPORTING
         iv_text       TYPE kernel_locks-lock_key
       RETURNING
-        VALUE(rv_key) TYPE string.
-
-    CLASS-METHODS decode
-      IMPORTING
-        iv_key         TYPE string
-      RETURNING
-        VALUE(rv_text) TYPE kernel_locks-lock_key.
+        VALUE(rv_key) TYPE int8.
 ENDCLASS.
 
 CLASS lcl_key IMPLEMENTATION.
   METHOD encode.
-    DATA lv_numc  TYPE n LENGTH 3.
-    DATA lv_index TYPE i.
-    DATA lv_byte  TYPE i.
-    DATA lv_hex   TYPE x LENGTH 1.
-    DATA(lv_xstr) = cl_abap_conv_codepage=>create_out( )->convert( |{ iv_text }| ).
-    DO xstrlen( lv_xstr ) TIMES.
-      lv_index = sy-index - 1.
-      lv_hex = lv_xstr+lv_index(1).
-      lv_byte = lv_hex.
-      lv_numc = lv_byte.
-      rv_key = rv_key && |{ lv_numc }|.
-    ENDDO.
+    DATA lv_hash  TYPE xstring.
+    DATA lv_empty TYPE xstring.
+
+* todo: rework this sometime? there might be collissions
+    TRY.
+        cl_abap_hmac=>calculate_hmac_for_raw(
+          EXPORTING
+            if_algorithm   = 'MD5'
+            if_key         = lv_empty
+            if_data        = cl_abap_conv_codepage=>create_out( )->convert( |{ iv_text }| )
+          IMPORTING
+            ef_hmacxstring = lv_hash ).
+      CATCH cx_abap_message_digest.
+        ASSERT 1 = 2.
+    ENDTRY.
+
+    rv_key = lv_hash(8).
   ENDMETHOD.
 
-  METHOD decode.
-    DATA lv_index   TYPE i.
-    DATA lv_xstring TYPE xstring.
-    DATA lv_hex     TYPE x LENGTH 1.
-    DATA lv_numc    TYPE n LENGTH 3.
-    DATA lv_int     TYPE i.
-    DATA lv_len     TYPE i.
-
-    lv_len = strlen( iv_key ).
-    lv_index = 0.
-    " decode 3 chars from left to right
-    WHILE lv_len > lv_index.
-      lv_numc = iv_key+lv_index(3).
-      lv_int = lv_numc.
-      lv_hex = lv_int.
-      CONCATENATE lv_xstring lv_hex INTO lv_xstring IN BYTE MODE.
-      lv_index = lv_index + 3.
-    ENDWHILE.
-    rv_text = cl_abap_conv_codepage=>create_in( )->convert( lv_xstring ).
-  ENDMETHOD.
 ENDCLASS.
 
 ******************************************************************
