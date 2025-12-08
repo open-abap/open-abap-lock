@@ -75,7 +75,7 @@ CLASS lcl_advisory IMPLEMENTATION.
 
     TRY.
         DATA(lo_result) = NEW cl_sql_statement( )->execute_query(
-          |SELECT EXISTS(SELECT * FROM pg_locks WHERE (classid::bigint << 32) \| objid::bigint = 3402733294331)| ).
+          |SELECT EXISTS(SELECT * FROM pg_locks WHERE (classid::bigint << 32) \| objid::bigint = { key })| ).
         lo_result->set_param( lr_foo ).
         lo_result->next( ).
         lo_result->close( ).
