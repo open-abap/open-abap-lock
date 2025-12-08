@@ -19,4 +19,4 @@ table `pg_locks`
 * `_scope`
 * `wait` flag
 * `mode`
-* relase at commit work if update task
+* release at commit work if update task
