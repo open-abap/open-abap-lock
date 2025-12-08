@@ -65,7 +65,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
   METHOD enqueue.
 
-    DATA ls_lock_row     TYPE kernel_locks.
+    DATA ls_lock_row TYPE kernel_locks.
 
 *******************
 
@@ -81,8 +81,6 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     ls_lock_row-hostname = sy-host.
     ls_lock_row-lock_mode = ''.
     ls_lock_row-lock_name = enqueue_name.
-
-    WRITE: / 'Simulating enqueue for table:', table_name, 'and enqueue:', enqueue_name.
 
     TRY.
         lcl_advisory=>lock( lcl_key=>encode( ls_lock_row-lock_key ) ).
