@@ -43,6 +43,9 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     CREATE DATA lr_dref TYPE (table_name).
     ASSIGN lr_dref->* TO <lg_row>.
 
+    WRITE '@KERNEL console.dir(input);'.
+    ASSERT 1 = 'foo'.
+
     lo_structdescr ?= cl_abap_typedescr=>describe_by_data( <lg_row> ).
     ASSERT lo_structdescr IS NOT INITIAL.
 
@@ -55,6 +58,8 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
         <lv_row_field> = <lv_field>.
       ENDIF.
     ENDLOOP.
+
+    rv_lock_key = <lg_row>.
 
   ENDMETHOD.
 
@@ -72,6 +77,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     DATA(lv_lock_key) = build_lock_key(
       input      = input
       table_name = lv_table_name ).
+    ASSERT lv_lock_key IS NOT INITIAL.
 
     ls_lock_row-table_name = lv_table_name.
     ls_lock_row-lock_key = lv_lock_key.
@@ -83,7 +89,12 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     WRITE: / 'Simulating enqueue for table:', lv_table_name, 'and enqueue:', lv_enqueue_name.
 
-    lcl_advisory=>lock( lcl_key=>encode( ls_lock_row-lock_key ) ).
+    TRY.
+        lcl_advisory=>lock( lcl_key=>encode( ls_lock_row-lock_key ) ).
+      CATCH lcx_advisory_lock_failed.
+        RAISE foreign_lock.
+    ENDTRY.
+
     INSERT kernel_locks FROM @ls_lock_row.
     ASSERT sy-subrc = 0.
 

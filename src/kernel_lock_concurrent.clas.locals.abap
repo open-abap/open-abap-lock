@@ -65,16 +65,35 @@ CLASS lcl_advisory DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS lock
       IMPORTING
-        key TYPE string.
+        key TYPE string
+      RAISING
+        lcx_advisory_lock_failed.
 
     CLASS-METHODS unlock
       IMPORTING
         key TYPE string.
+  PRIVATE SECTION.
 ENDCLASS.
 
 CLASS lcl_advisory IMPLEMENTATION.
+
   METHOD lock.
 " pg_try_advisory_lock
+
+    DATA lv_str TYPE string.
+    DATA lr_foo TYPE REF TO data.
+    GET REFERENCE OF lv_str INTO lr_foo.
+
+    ASSERT key IS NOT INITIAL.
+
+    TRY.
+        DATA(lo_result) = NEW cl_sql_statement( )->execute_query( |SELECT pg_try_advisory_lock( { key } )| ).
+        lo_result->set_param( lr_foo ).
+        lo_result->next( ).
+        lo_result->close( ).
+      CATCH cx_sql_exception INTO DATA(lx_sql).
+        ASSERT 1 = 2.
+    ENDTRY.
 
     WRITE / 'Advisory lock acquired'.
   ENDMETHOD.
@@ -83,4 +102,5 @@ CLASS lcl_advisory IMPLEMENTATION.
 " pg_advisory_unlock
     WRITE / 'Advisory lock released'.
   ENDMETHOD.
+
 ENDCLASS.
