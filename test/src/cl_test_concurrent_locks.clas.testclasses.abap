@@ -2,6 +2,7 @@ CLASS ltcl_test DEFINITION FOR TESTING RISK LEVEL HARMLESS DURATION MEDIUM FINAL
   PUBLIC SECTION.
     METHODS test_enqueue_dequeue FOR TESTING RAISING cx_static_check.
     METHODS standalone_dequeue FOR TESTING RAISING cx_static_check.
+    METHODS cleanup FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 CLASS ltcl_test IMPLEMENTATION.
@@ -31,6 +32,34 @@ CLASS ltcl_test IMPLEMENTATION.
     CALL FUNCTION 'DEQUEUE_EZABAPGIT_UNIT_T'
       EXPORTING
         bname = 'NONEXISTENT_LOCK'.
+
+  ENDMETHOD.
+
+  METHOD cleanup.
+
+* start with a clean state
+    kernel_lock_concurrent=>cleanup_locks( ).
+
+    CALL FUNCTION 'ENQUEUE_EZABAPGIT_UNIT_T'
+      EXPORTING
+        bname          = 'HELLO'
+      EXCEPTIONS
+        foreign_lock   = 1
+        system_failure = 2
+        OTHERS         = 3.
+    cl_abap_unit_assert=>assert_subrc( ).
+
+    DATA(ls_result) = kernel_lock_concurrent=>cleanup_locks( ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_result-valid_locks
+      exp = 1 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_result-cleaned_locks
+      exp = 0 ).
+
+    CALL FUNCTION 'DEQUEUE_EZABAPGIT_UNIT_T'
+      EXPORTING
+        bname = 'HELLO'.
 
   ENDMETHOD.
 

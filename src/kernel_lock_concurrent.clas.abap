@@ -16,8 +16,15 @@ CLASS kernel_lock_concurrent DEFINITION PUBLIC.
         table_name   TYPE string
         enqueue_name TYPE string
         input        TYPE any.
+
+    TYPES: BEGIN OF ty_cleanup,
+             valid_locks   TYPE i,
+             cleaned_locks TYPE i,
+           END OF ty_cleanup.
+    CLASS-METHODS cleanup_locks
+      RETURNING
+        VALUE(rs_result) TYPE ty_cleanup.
   PRIVATE SECTION.
-    CLASS-METHODS cleanup_locks.
     CLASS-METHODS build_lock_key
       IMPORTING
         input              TYPE any
@@ -33,15 +40,23 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD cleanup_locks.
-* todoooooo
-    DELETE FROM kernel_locks WHERE username = sy-uname.
+    SELECT * FROM kernel_locks INTO TABLE @DATA(lt_locks) ORDER BY PRIMARY KEY ##SUBRC_OK.
+    LOOP AT lt_locks INTO DATA(ls_lock).
+      DATA(lv_exists) = lcl_advisory=>exists( lcl_key=>encode( ls_lock-lock_key ) ).
+      IF lv_exists = abap_true.
+        rs_result-valid_locks = rs_result-valid_locks + 1.
+      ELSE.
+        DELETE FROM kernel_locks WHERE table_name = @ls_lock-table_name AND lock_key = @ls_lock-lock_key.
+        rs_result-cleaned_locks = rs_result-cleaned_locks + 1.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD build_lock_key.
 
-    DATA lr_dref         TYPE REF TO data.
-    DATA lo_structdescr  TYPE REF TO cl_abap_structdescr.
-    DATA lv_string       TYPE string.
+    DATA lr_dref        TYPE REF TO data.
+    DATA lo_structdescr TYPE REF TO cl_abap_structdescr.
+    DATA lv_string      TYPE string.
 
     FIELD-SYMBOLS <lg_row> TYPE any.
 

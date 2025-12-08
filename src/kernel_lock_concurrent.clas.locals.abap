@@ -44,17 +44,29 @@ CLASS lcl_advisory DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS lock
       IMPORTING
-        key TYPE string
+        key TYPE int8
       RAISING
         lcx_advisory_lock_failed.
 
     CLASS-METHODS unlock
       IMPORTING
-        key TYPE string.
+        key TYPE int8.
+
+    "! Check if the lock exists, no information if its the current session holding it, or which is holding it
+    CLASS-METHODS exists
+      IMPORTING
+        key              TYPE int8
+      RETURNING
+        VALUE(rv_exists) TYPE abap_bool.
   PRIVATE SECTION.
 ENDCLASS.
 
 CLASS lcl_advisory IMPLEMENTATION.
+
+  METHOD exists.
+" todo: implement
+    rv_exists = abap_false.
+  ENDMETHOD.
 
   METHOD lock.
 

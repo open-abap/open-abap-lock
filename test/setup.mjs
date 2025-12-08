@@ -2,7 +2,7 @@ import {PostgresDatabaseClient} from "@abaplint/database-pg";
 
 export async function preFunction(abap, schemas, insert) {
   abap.context.databaseConnections["DEFAULT"] = new PostgresDatabaseClient({
-      trace: true,
+      trace: false,
       user: "postgres",
       host: "localhost",
       database: "postgres",
