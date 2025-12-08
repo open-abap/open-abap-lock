@@ -78,13 +78,13 @@ ENDCLASS.
 CLASS lcl_advisory IMPLEMENTATION.
 
   METHOD lock.
-" pg_try_advisory_lock
 
     DATA lv_str TYPE string.
     DATA lr_foo TYPE REF TO data.
-    GET REFERENCE OF lv_str INTO lr_foo.
+
 
     ASSERT key IS NOT INITIAL.
+    GET REFERENCE OF lv_str INTO lr_foo.
 
     TRY.
         DATA(lo_result) = NEW cl_sql_statement( )->execute_query( |SELECT pg_try_advisory_lock( { key } )| ).
