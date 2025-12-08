@@ -92,6 +92,8 @@ CLASS lcl_advisory IMPLEMENTATION.
         lo_result->next( ).
         lo_result->close( ).
       CATCH cx_sql_exception INTO DATA(lx_sql).
+        WRITE / 'SQL Error:'.
+        WRITE / lx_sql->get_text( ).
         ASSERT 1 = 2.
     ENDTRY.
 
