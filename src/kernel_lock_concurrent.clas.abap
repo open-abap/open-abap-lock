@@ -132,6 +132,11 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
       input      = input
       table_name = table_name ).
 
+    IF lcl_advisory=>exists( lcl_key=>encode( lv_lock_key ) ) = abap_false.
+      " lock does not exist
+      RETURN.
+    ENDIF.
+
     TRY.
         lcl_advisory=>lock( lcl_key=>encode( lv_lock_key ) ).
       CATCH lcx_advisory_lock_failed.
