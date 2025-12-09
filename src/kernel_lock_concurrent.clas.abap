@@ -105,7 +105,11 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     DATA(lv_lock_key) = build_lock_key(
       input      = input
       table_name = table_name ).
-    ASSERT lv_lock_key IS NOT INITIAL.
+    IF lv_lock_key IS INITIAL.
+      WRITE / 'Lock key is initial'.
+      WRITE '@KERNEL console.dir(INPUT);'.
+      ASSERT lv_lock_key IS NOT INITIAL.
+    ENDIF.
 
     ls_lock_row-table_name = table_name.
     ls_lock_row-lock_key = lv_lock_key.
