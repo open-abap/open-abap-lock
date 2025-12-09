@@ -125,7 +125,8 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
         RAISE foreign_lock.
     ENDTRY.
 
-    INSERT kernel_locks FROM @ls_lock_row.
+    " it might not be cleaned up, so do MODIFY
+    MODIFY kernel_locks FROM @ls_lock_row.
     ASSERT sy-subrc = 0.
 
   ENDMETHOD.
