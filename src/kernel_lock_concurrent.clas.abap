@@ -47,7 +47,7 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
       IF lv_exists = abap_true.
         rs_result-valid_locks = rs_result-valid_locks + 1.
       ELSE.
-        DELETE FROM kernel_locks WHERE table_name = @ls_lock-table_name AND lock_key = @ls_lock-lock_key.
+        DELETE FROM kernel_locks WHERE table_name = @ls_lock-table_name AND lock_key = @ls_lock-lock_key ##SUBRC_OK.
         " dont check subrc, this method might run in parallel
         rs_result-cleaned_locks = rs_result-cleaned_locks + 1.
       ENDIF.
@@ -135,11 +135,12 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
     TRY.
         lcl_advisory=>lock( lcl_key=>encode( lv_lock_key ) ).
       CATCH lcx_advisory_lock_failed.
-        " it doesnt have the lock, or another session has the lock
+        " the lock does not exist, or another session has the lock
         RETURN.
     ENDTRY.
 
     DELETE FROM kernel_locks WHERE table_name = @table_name AND lock_key = @lv_lock_key.
+    ASSERT sy-subrc = 0.
 
     " advisory locks stack,
     lcl_advisory=>unlock( lcl_key=>encode( lv_lock_key ) ).
