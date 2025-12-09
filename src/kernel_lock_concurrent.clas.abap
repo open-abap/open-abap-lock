@@ -1,7 +1,5 @@
 CLASS kernel_lock_concurrent DEFINITION PUBLIC.
   PUBLIC SECTION.
-    CLASS-METHODS class_constructor.
-
     CLASS-METHODS enqueue
       IMPORTING
         input        TYPE any
@@ -25,19 +23,22 @@ CLASS kernel_lock_concurrent DEFINITION PUBLIC.
       RETURNING
         VALUE(rs_result) TYPE ty_cleanup.
   PRIVATE SECTION.
+    CONSTANTS cleanup_interval_seconds TYPE i VALUE 300.
+    CLASS-DATA last_cleanup TYPE timestamp.
+
     CLASS-METHODS build_lock_key
       IMPORTING
         input              TYPE any
         table_name         TYPE string
       RETURNING
         VALUE(rv_lock_key) TYPE kernel_locks-lock_key.
+
+    CLASS-METHODS should_cleanup
+      RETURNING
+        VALUE(rv_should) TYPE abap_bool.
 ENDCLASS.
 
 CLASS kernel_lock_concurrent IMPLEMENTATION.
-
-  METHOD class_constructor.
-    cleanup_locks( ).
-  ENDMETHOD.
 
   METHOD cleanup_locks.
     SELECT * FROM kernel_locks INTO TABLE @DATA(lt_locks) ORDER BY PRIMARY KEY ##SUBRC_OK.
@@ -47,9 +48,24 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
         rs_result-valid_locks = rs_result-valid_locks + 1.
       ELSE.
         DELETE FROM kernel_locks WHERE table_name = @ls_lock-table_name AND lock_key = @ls_lock-lock_key.
+        " dont check subrc, this method might run in parallel
         rs_result-cleaned_locks = rs_result-cleaned_locks + 1.
       ENDIF.
     ENDLOOP.
+
+    GET TIME STAMP FIELD last_cleanup.
+  ENDMETHOD.
+
+  METHOD should_cleanup.
+
+    GET TIME STAMP FIELD DATA(lv_now).
+
+    DATA(lv_elapsed) = cl_abap_tstmp=>subtract(
+      tstmp1 = lv_now
+      tstmp2 = last_cleanup ).
+
+    rv_should = xsdbool( lv_elapsed > cleanup_interval_seconds ).
+
   ENDMETHOD.
 
   METHOD build_lock_key.
@@ -82,7 +98,9 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
     DATA ls_lock_row TYPE kernel_locks.
 
-*******************
+    IF should_cleanup( ) = abap_true.
+      DATA(ls_cleanup) = cleanup_locks( ).
+    ENDIF.
 
     DATA(lv_lock_key) = build_lock_key(
       input      = input
