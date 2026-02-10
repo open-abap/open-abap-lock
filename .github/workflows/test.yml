@@ -18,5 +18,6 @@ jobs:
     - uses: actions/setup-node@v6
     - run: npm run docker:start
     - run: docker network ls
+    - run: sleep 30
     - run: npm install
     - run: npm test
