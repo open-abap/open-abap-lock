@@ -4,7 +4,8 @@ export async function preFunction(abap, schemas, insert) {
   abap.context.databaseConnections["DEFAULT"] = new PostgresDatabaseClient({
       trace: false,
       user: "postgres",
-      host: "localhost",
+//      host: "localhost",
+      host: "host.docker.internal",
       database: "postgres",
       password: "postgres",
       port: 5432,
