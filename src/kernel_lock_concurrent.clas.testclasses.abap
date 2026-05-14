@@ -6,7 +6,7 @@ ENDCLASS.
 CLASS ltcl_test_key IMPLEMENTATION.
   METHOD test1.
     DATA(lv_input) = |abc|.
-    DATA(lv_key) = lcl_key=>encode( lv_input ).
+    DATA(lv_key) = lcl_key=>encode( CONV #( lv_input ) ).
     cl_abap_unit_assert=>assert_not_initial( lv_key ).
 
     cl_abap_unit_assert=>assert_equals(
