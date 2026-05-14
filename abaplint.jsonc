@@ -3,7 +3,8 @@
     "files": [
       "/src/**/*.*",
       "/test/src/**/*.*"
-    ]
+    ],
+    "errorOnDuplicateFilenames": true
   },
   "dependencies": [
     {
@@ -326,41 +327,7 @@
     },
     "nrob_consistency": true,
     "object_naming": false,
-    "obsolete_statement": {
-      "exclude": [],
-      "severity": "Error",
-      "refresh": true,
-      "compute": true,
-      "commonPart": true,
-      "fieldGroups": true,
-      "replaceInto": true,
-      "add": true,
-      "subtract": true,
-      "multiply": true,
-      "divide": true,
-      "move": true,
-      "requested": true,
-      "occurs": true,
-      "setExtended": true,
-      "withHeaderLine": true,
-      "fieldSymbolStructure": true,
-      "typePools": true,
-      "load": true,
-      "parameter": true,
-      "ranges": true,
-      "communication": true,
-      "pack": true,
-      "selectWithoutInto": true,
-      "freeMemory": true,
-      "exitFromSQL": true,
-      "sortByFS": true,
-      "callTransformation": true,
-      "regex": true,
-      "occurences": true,
-      "clientSpecified": true,
-      "formDefinition": true,
-      "formImplementation": true
-    },
+    "obsolete_statement": true,
     "omit_parameter_name": true,
     "omit_preceding_zeros": true,
     "omit_receiving": true,
