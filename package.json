@@ -12,9 +12,9 @@
   },
   "license": "",
   "dependencies": {
-    "@abaplint/cli": "^2.119.20",
-    "@abaplint/runtime": "^2.13.23",
+    "@abaplint/cli": "^2.119.37",
+    "@abaplint/runtime": "^2.13.30",
     "@abaplint/database-pg": "^2.11.78",
-    "@abaplint/transpiler-cli": "^2.13.23"
+    "@abaplint/transpiler-cli": "^2.13.30"
   }
 }
