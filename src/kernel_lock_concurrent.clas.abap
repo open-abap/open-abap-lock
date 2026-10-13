@@ -58,6 +58,11 @@ CLASS kernel_lock_concurrent IMPLEMENTATION.
 
   METHOD should_cleanup.
 
+    IF last_cleanup IS INITIAL.
+      rv_should = abap_true.
+      RETURN.
+    ENDIF.
+
     GET TIME STAMP FIELD DATA(lv_now).
 
     DATA(lv_elapsed) = cl_abap_tstmp=>subtract(
